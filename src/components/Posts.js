@@ -1,8 +1,6 @@
 import React, { Component, useState } from 'react';
 
-class Posts extends Component {
-  // const [posts, setPosts] = useState([]);
-
+export default class Posts extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,5 +38,3 @@ class Posts extends Component {
     );
   }
 }
-
-export default Posts;

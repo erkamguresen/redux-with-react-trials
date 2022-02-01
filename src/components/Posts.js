@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../redux/actions/postActions';
+import * as postActions from '../redux/actions/postActions';
 
 class Posts extends Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   const wtf = this.props.fetchPosts();
-  //   console.log('wtf', wtf);
-  // }
-  componentWillMount() {
-    this.props.fetchPosts();
+  componentDidMount() {
+    this.props.actions.getPosts();
   }
 
   render() {
-    console.log(this.props);
-    const { posts } = this.props.posts;
-    console.log('posts', posts);
+    // console.log('props', this.props);
+    const posts = this.props.posts;
+    // console.log('posts', this.props.posts);
     const postItems = posts.map((post) => (
       <div key={post.id}>
         <h3>{post.title}</h3>
@@ -33,10 +30,20 @@ class Posts extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    posts: state.posts,
+    actions: {
+      getPosts: bindActionCreators(postActions.getPosts, dispatch),
+      // newPost: bindActionCreators(postActions.newPost, dispatch),
+    },
   };
 };
 
-export default connect(mapStateToProps, { fetchPosts })(Posts);
+const mapStateToProps = (state) => {
+  return {
+    posts: state.posts,
+    // post: state.post,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Posts);

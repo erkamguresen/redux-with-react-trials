@@ -7,7 +7,7 @@ export default function postsReducer(state = initialState.posts, action) {
       return action.payload;
     case actionTypes.GET_POSTS_SUCCESS:
       return action.payload;
-    case actionTypes.NEW_POST:
+    case actionTypes.ADD_NEW_POST:
       return action.payload;
     default:
       return state;

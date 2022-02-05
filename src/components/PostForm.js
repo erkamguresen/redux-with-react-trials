@@ -1,70 +1,89 @@
-import React, { Component, useState } from 'react';
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as postActions from '../redux/actions/postActions';
 
-export default class PostForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: '',
-      body: '',
-    };
+function PostForm({ ...props }) {
+  console.log('props', props);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  // function handleChange(event) {
+  //   event.preventDefault();
+  //   console.log('props.state', props.state);
 
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+  //   const { name, value } = event.target;
 
-  handleSubmit(event) {
+  //   console.log('target', name, value);
+
+  //   console.log('state', props.state);
+  // }
+
+  function handleSubmit(event) {
     event.preventDefault();
+    event.stopPropagation();
 
-    const post = {
-      title: this.state.title,
-      body: this.state.body,
-    };
+    console.log('title', event.target[0].value);
+    console.log('body', event.target[1].value);
 
-    fetch('https://jsonplaceholder.typicode.com/posts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    props.actions.newPost({
+      title: event.target[0].value,
+      body: event.target[1].value,
+    });
+
+    //since the fetch returns back same values
+    // does not actually add the post to the database
+    props.actions.addNewPost(
+      {
+        title: event.target[0].value,
+        body: event.target[1].value,
+        id: 101,
       },
-
-      body: JSON.stringify(post),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-
-    // console.log(this.state);
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>Post Form</h1>
-        <form onSubmit={this.handleOnSubmit}>
-          <div>
-            <label>Title</label>
-            <br />
-            <input
-              type='text'
-              name='title'
-              value={this.state.title}
-              onChange={this.handleChange}
-            />
-          </div>
-          <div>
-            <label>Body</label>
-            <br />
-            <textarea
-              name='body'
-              value={this.state.body}
-              onChange={this.handleChange}
-            />
-          </div>
-          <button type='submit'>Submit</button>
-        </form>
-      </div>
+      props.state.posts
     );
   }
+
+  return (
+    <div>
+      <h1>Post Form</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Title</label>
+          <br />
+          <input
+            type='text'
+            name='title'
+            // value={props.title}
+            // onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Body</label>
+          <br />
+          <textarea
+            name='body'
+            // value={props.body}
+            // onChange={handleChange}
+          />
+        </div>
+        <button type='submit'>Submit</button>
+      </form>
+    </div>
+  );
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: {
+      newPost: bindActionCreators(postActions.newPost, dispatch),
+      addNewPost: bindActionCreators(postActions.addNewPost, dispatch),
+    },
+  };
+};
+
+const mapStateToProps = (state, ownProps) => {
+  console.log('state', state, ownProps);
+  const { newPost, posts } = state;
+
+  return { state: { newPost, posts } };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostForm);

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-
-// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as postActions from '../redux/actions/postActions';
+// import PropTypes from 'prop-types';
 
 class Posts extends Component {
   componentDidMount() {
@@ -11,9 +10,8 @@ class Posts extends Component {
   }
 
   render() {
-    // console.log('props', this.props);
     const posts = this.props.posts;
-    // console.log('posts', this.props.posts);
+    console.log('here posts', posts);
     const postItems = posts.map((post) => (
       <div key={post.id}>
         <h3>{post.title}</h3>
@@ -40,9 +38,10 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state) => {
+  console.log('state', state);
   return {
     posts: state.posts,
-    // post: state.post,
+    post: state.post,
   };
 };
 
